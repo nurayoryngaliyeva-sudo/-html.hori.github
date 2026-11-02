@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX — Digital Experiences From The Future</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" defer></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0a0a0f',
+                        ultramarine: '#5B50F6',
+                        ultramarineGlow: '#4338ca',
+                        glassBg: 'rgba(18, 18, 28, 0.55)',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)',
+                        glassBorderHover: 'rgba(91, 80, 246, 0.4)',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom Noise Texture Overlay */
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Glassmorphism Styles */
+        .glass-card {
+            background: rgba(18, 18, 28, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(91, 80, 246, 0.4);
+            box-shadow: 0 12px 40px 0 rgba(91, 80, 246, 0.15);
+        }
+
+        .glass-nav {
+            background: rgba(10, 10, 15, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Glowing Animated Border for CTA Button */
+        .glowing-btn-wrapper {
+            position: relative;
+            border-radius: 9999px;
+            padding: 1px;
+            background: linear-gradient(90deg, rgba(91,80,246,0.3), rgba(255,255,255,0.1), rgba(91,80,246,0.8), rgba(91,80,246,0.3));
+            background-size: 300% 100%;
+            animation: glowMove 4s linear infinite;
+        }
+
+        @keyframes glowMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom Cursor */
+        body {
+            cursor: default;
+        }
+
+        #cursor-dot, #cursor-outline {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s ease, transform 0.15s ease-out;
+        }
+
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #5B50F6;
+        }
+
+        #cursor-outline {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(91, 80, 246, 0.5);
+            transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, transform 0.15s ease-out;
+        }
+
+        .cursor-hover #cursor-outline {
+            width: 55px;
+            height: 55px;
+            background: rgba(91, 80, 246, 0.1);
+            border-color: rgba(91, 80, 246, 0.8);
+        }
+
+        /* Scroll Animation Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Text Gradient Effect */
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 30%, #A5A0FF 70%, #5B50F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-purple {
+            background: linear-gradient(135deg, #FFFFFF 0%, #E2E0FF 50%, #5B50F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hide scrollbars for clean aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e1e2d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5B50F6;
+        }
+    </style>
+</head>
+
+<body class="bg-darkBg text-slate-100 font-sans selection:bg-ultramarine selection:text-white relative overflow-x-hidden">
+
+    <!-- Custom Cursor Dots -->
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-outline" class="hidden md:block"></div>
+
+    <!-- Background Noise & Ambient Glow Spots -->
+    <div class="fixed inset-0 bg-noise pointer-events-none z-10"></div>
+    
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[140px] pointer-events-none z-0"></div>
+    <div class="fixed top-[40%] right-[-10%] w-[600px] h-[600px] bg-indigo-900/15 rounded-full blur-[160px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] left-[20%] w-[550px] h-[550px] bg-teal-900/15 rounded-full blur-[150px] pointer-events-none z-0"></div>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-2 group">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-ultramarine to-indigo-400 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-ultramarine/30">
+                    <span class="font-extrabold text-white text-lg tracking-tighter">V</span>
+                </div>
+                <span class="text-xl font-extrabold tracking-widest text-white">VORTEX<span class="text-ultramarine">.</span></span>
+            </a>
+
+            <!-- Desktop Navigation Menu -->
+            <nav class="hidden md:flex items-center space-x-10 text-sm font-medium text-slate-300">
+                <a href="#work" class="hover:text-white transition-colors duration-200 relative group py-1">
+                    Проекты
+                    <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-ultramarine transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#about" class="hover:text-white transition-colors duration-200 relative group py-1">
+                    О нас
+                    <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-ultramarine transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#services" class="hover:text-white transition-colors duration-200 relative group py-1">
+                    Услуги
+                    <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-ultramarine transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#contact" class="hover:text-white transition-colors duration-200 relative group py-1">
+                    Контакты
+                    <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-ultramarine transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </nav>
+
+            <!-- CTA Header Button -->
+            <div class="hidden sm:block">
+                <div class="glowing-btn-wrapper">
+                    <a href="#contact" class="block px-6 py-2.5 rounded-full bg-darkBg/90 hover:bg-ultramarine text-white text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-ultramarine/40 flex items-center space-x-2">
+                        <span>Let's Talk</span>
+                        <i class="fa-solid font-xs fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-300"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2">
+                <i class="fa-solid fa-bars-staggered text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden glass-card border-t border-glassBorder px-6 py-6 space-y-4">
+            <a href="#work" class="block text-slate-200 hover:text-ultramarine text-lg font-medium">Проекты</a>
+            <a href="#about" class="block text-slate-200 hover:text-ultramarine text-lg font-medium">О нас</a>
+            <a href="#services" class="block text-slate-200 hover:text-ultramarine text-lg font-medium">Услуги</a>
+            <a href="#contact" class="block text-slate-200 hover:text-ultramarine text-lg font-medium">Контакты</a>
+            <div class="pt-4 border-t border-glassBorder">
+                <a href="#contact" class="block w-full text-center py-3 rounded-full bg-ultramarine text-white font-semibold">Let's Talk</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
+            
+            <!-- Left Hero Content -->
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left reveal">
+                
+                <!-- Status Badge -->
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card text-xs font-semibold tracking-wider uppercase text-slate-300 border border-glassBorder">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Открыты к новым проектам 2026</span>
+                </div>
+
+                <!-- Main Bold Heading -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
+                    We Design <br class="hidden sm:inline"/>
+                    <span class="text-gradient">Digital Experiences</span> <br/>
+                    From The Future
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                    Интерактивный веб-дизайн, 3D-графика и цифровые продукты премиум-класса для брендов, задающих тренды.
+                </p>
+
+                <!-- Hero CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#work" class="w-full sm:w-auto px-8 py-4 rounded-full bg-ultramarine hover:bg-indigo-600 text-white font-semibold text-base transition-all duration-300 shadow-lg shadow-ultramarine/30 hover:shadow-ultramarine/60 flex items-center justify-center space-x-3 group">
+                        <span>Исследовать проекты</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform duration-300"></i>
+                    </a>
+
+                    <a href="#about" class="w-full sm:w-auto px-8 py-4 rounded-full glass-card hover:bg-white/10 text-slate-200 font-medium text-base transition-all duration-300 flex items-center justify-center space-x-2 border border-glassBorder">
+                        <i class="fa-regular fa-circle-play text-ultramarine"></i>
+                        <span>Наш шоурил</span>
+                    </a>
+                </div>
+
+                <!-- Clients/Trust Line -->
+                <div class="pt-8 flex flex-wrap items-center justify-center lg:justify-start gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                    <span class="text-xs uppercase tracking-widest text-slate-400 w-full sm:w-auto text-center lg:text-left">Доверие лидеров:</span>
+                    <span class="font-bold text-lg tracking-wider">AETHER</span>
+                    <span class="font-bold text-lg tracking-wider">LUMINA</span>
+                    <span class="font-bold text-lg tracking-wider">NEURAL LABS</span>
+                    <span class="font-bold text-lg tracking-wider">NEXUS</span>
+                </div>
+
+            </div>
+
+            <!-- Right Visual 3D Particle Canvas -->
+            <div class="lg:col-span-5 relative flex items-center justify-center">
+                <!-- Glowing Aura backdrop -->
+                <div class="absolute w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] bg-ultramarine/20 rounded-full blur-3xl -z-10"></div>
+                
+                <!-- Canvas Container -->
+                <div class="relative w-full max-w-[460px] aspect-square rounded-3xl glass-card border border-glassBorder p-2 overflow-hidden flex items-center justify-center shadow-2xl">
+                    <canvas id="hero-canvas" class="w-full h-full rounded-2xl cursor-grab active:cursor-grabbing"></canvas>
+                    
+                    <!-- Overlay canvas indicator -->
+                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center px-4 py-2 rounded-xl bg-darkBg/60 backdrop-blur-md border border-white/5 text-xs text-slate-400 pointer-events-none">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-hand-pointer text-ultramarine animate-pulse"></i> Интерактивная сфера
+                        </span>
+                        <span class="font-mono text-[10px] text-slate-500">FPS: 60</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PORTFOLIO GRID SECTION -->
+    <section id="work" class="py-28 px-6 relative z-20">
+        <div class="max-w-7xl mx-auto space-y-16">
+            
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 reveal">
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-widest text-ultramarine mb-3">Портфолио</div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Избранные Проекты</h2>
+                </div>
+                <p class="text-slate-400 max-w-md text-sm sm:text-base">
+                    Создаем интерфейсы, которые притягивают внимание, повышают конверсию и оставляют яркий след.
+                </p>
+            </div>
+
+            <!-- Portfolio Projects Grid (2x2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Project Card 1 -->
+                <div class="group relative glass-card rounded-3xl overflow-hidden border border-glassBorder transition-all duration-500 hover:-translate-y-2 reveal">
+                    <div class="relative h-[340px] sm:h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" 
+                             alt="Fintech Neo App" 
+                             class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                             onerror="this.src='https://placehold.co/1200x800/12121c/ffffff?text=Fintech+Neo+App'"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        
+                        <!-- Top Tag Badge -->
+                        <div class="absolute top-6 left-6 z-10">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-darkBg/70 backdrop-blur-md border border-white/10 text-white">
+                                FinTech / Web3
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 relative z-10 -mt-20">
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="text-2xl font-bold text-white group-hover:text-ultramarine transition-colors duration-300">
+                                Apex Capital Web3
+                            </h3>
+                            <a href="#" class="w-10 h-10 rounded-full glass-card border border-glassBorder flex items-center justify-center text-white group-hover:bg-ultramarine group-hover:border-ultramarine transition-all duration-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">
+                            Платформа нового поколения для децентрализованного управления инвестициями с 3D-визуализацией данных.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">UI/UX Design</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Three.js</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">React</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="group relative glass-card rounded-3xl overflow-hidden border border-glassBorder transition-all duration-500 hover:-translate-y-2 reveal">
+                    <div class="relative h-[340px] sm:h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1200&auto=format&fit=crop" 
+                             alt="Luxury Watch Experience" 
+                             class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                             onerror="this.src='https://placehold.co/1200x800/12121c/ffffff?text=Aether+Chronos'"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute top-6 left-6 z-10">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-darkBg/70 backdrop-blur-md border border-white/10 text-white">
+                                E-Commerce / Luxury
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 relative z-10 -mt-20">
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="text-2xl font-bold text-white group-hover:text-ultramarine transition-colors duration-300">
+                                Chronos Atelier
+                            </h3>
+                            <a href="#" class="w-10 h-10 rounded-full glass-card border border-glassBorder flex items-center justify-center text-white group-hover:bg-ultramarine group-hover:border-ultramarine transition-all duration-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">
+                            Интерактивный интернет-магазин швейцарских часов с эффектом погружения и кастомизатором деталей.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">3D Modeling</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Interactive Web</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Branding</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="group relative glass-card rounded-3xl overflow-hidden border border-glassBorder transition-all duration-500 hover:-translate-y-2 reveal">
+                    <div class="relative h-[340px] sm:h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" 
+                             alt="AI SaaS Dashboard" 
+                             class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                             onerror="this.src='https://placehold.co/1200x800/12121c/ffffff?text=NeuralMind+AI'"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute top-6 left-6 z-10">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-darkBg/70 backdrop-blur-md border border-white/10 text-white">
+                                AI SaaS Platform
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 relative z-10 -mt-20">
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="text-2xl font-bold text-white group-hover:text-ultramarine transition-colors duration-300">
+                                NeuralMind Intelligence
+                            </h3>
+                            <a href="#" class="w-10 h-10 rounded-full glass-card border border-glassBorder flex items-center justify-center text-white group-hover:bg-ultramarine group-hover:border-ultramarine transition-all duration-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">
+                            Панель управления и дизайн-система для платформы искусственного интеллекта корпоративного уровня.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Design System</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Fullstack</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">SaaS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 -->
+                <div class="group relative glass-card rounded-3xl overflow-hidden border border-glassBorder transition-all duration-500 hover:-translate-y-2 reveal">
+                    <div class="relative h-[340px] sm:h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" 
+                             alt="Architecture Studio" 
+                             class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                             onerror="this.src='https://placehold.co/1200x800/12121c/ffffff?text=Vanguard+Arch'"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/40 to-transparent opacity-90 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute top-6 left-6 z-10">
+                            <span class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-darkBg/70 backdrop-blur-md border border-white/10 text-white">
+                                Architecture / Design
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 relative z-10 -mt-20">
+                        <div class="flex justify-between items-end mb-3">
+                            <h3 class="text-2xl font-bold text-white group-hover:text-ultramarine transition-colors duration-300">
+                                Vanguard Architecture
+                            </h3>
+                            <a href="#" class="w-10 h-10 rounded-full glass-card border border-glassBorder flex items-center justify-center text-white group-hover:bg-ultramarine group-hover:border-ultramarine transition-all duration-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">
+                            Минималистичный сайт бюро премиальной архитектуры с кинематографическими анимациями скролла.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">WebGL Animation</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">Minimalism</span>
+                            <span class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-md">GSAP</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- View All Projects Button -->
+            <div class="text-center pt-6 reveal">
+                <a href="#contact" class="inline-flex items-center space-x-3 text-slate-300 hover:text-white font-medium border-b border-ultramarine pb-1 transition-all duration-300 group">
+                    <span>Посмотреть все кейсы (24+)</span>
+                    <i class="fa-solid fa-arrow-right text-xs text-ultramarine group-hover:translate-x-2 transition-transform duration-300"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- INTERACTIVE STATS SECTION -->
+    <section class="py-20 px-6 relative z-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Stat Card 1 -->
+                <div class="glass-card rounded-2xl p-8 text-center border border-glassBorder hover:border-ultramarine/50 transition-all duration-300 reveal">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-gradient mb-2 counter" data-target="120">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-400 tracking-wider uppercase">Успешных проектов</div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="glass-card rounded-2xl p-8 text-center border border-glassBorder hover:border-ultramarine/50 transition-all duration-300 reveal">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-gradient mb-2 counter" data-target="18">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-400 tracking-wider uppercase">Наград Awwwards & FWA</div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="glass-card rounded-2xl p-8 text-center border border-glassBorder hover:border-ultramarine/50 transition-all duration-300 reveal">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-gradient mb-2"><span class="counter" data-target="99">0</span>%</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-400 tracking-wider uppercase">Удовлетворенность клиентов</div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="glass-card rounded-2xl p-8 text-center border border-glassBorder hover:border-ultramarine/50 transition-all duration-300 reveal">
+                    <div class="text-4xl sm:text-5xl font-extrabold text-gradient mb-2 counter" data-target="14">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-400 tracking-wider uppercase">Стран мира</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="py-28 px-6 relative z-20">
+        <div class="max-w-7xl mx-auto space-y-16">
+            
+            <div class="max-w-2xl reveal">
+                <div class="text-xs font-semibold uppercase tracking-widest text-ultramarine mb-3">Наши Компетенции</div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Сервис премиального качества</h2>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Service Item 1 -->
+                <div class="glass-card rounded-3xl p-8 sm:p-10 border border-glassBorder group hover:border-ultramarine/40 transition-all duration-300 reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-ultramarine/10 border border-ultramarine/30 flex items-center justify-center text-ultramarine text-2xl mb-6 group-hover:scale-110 group-hover:bg-ultramarine group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">UI/UX & Interactive Design</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm sm:text-base mb-6">
+                        Проектируем интуитивные интерфейсы с акцентом на эмоции пользователя, микроанимации и бесшовный пользовательский опыт.
+                    </p>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Прототипирование и UX Исследования</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Дизайн-системы кодового уровня</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Мобильные и Веб-приложения</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service Item 2 -->
+                <div class="glass-card rounded-3xl p-8 sm:p-10 border border-glassBorder group hover:border-ultramarine/40 transition-all duration-300 reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-ultramarine/10 border border-ultramarine/30 flex items-center justify-center text-ultramarine text-2xl mb-6 group-hover:scale-110 group-hover:bg-ultramarine group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">3D Graphics & WebGL</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm sm:text-base mb-6">
+                        Создаем захватывающие 3D-миры прямо в браузере с помощью Three.js и WebGL, выделяя ваш бренд на фоне конкурентов.
+                    </p>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Интерактивные 3D-модели</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Шейдерные анимации и частицы</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Иммерсивные промо-лендинги</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service Item 3 -->
+                <div class="glass-card rounded-3xl p-8 sm:p-10 border border-glassBorder group hover:border-ultramarine/40 transition-all duration-300 reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-ultramarine/10 border border-ultramarine/30 flex items-center justify-center text-ultramarine text-2xl mb-6 group-hover:scale-110 group-hover:bg-ultramarine group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">High-load Front-end & Creative Coding</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm sm:text-base mb-6">
+                        Чистый, высокопроизводительный код с оптимизацией под 60 FPS, SEO-готовностью и молниеносной загрузкой.
+                    </p>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>React / Next.js / Vue</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Сложная анимация (GSAP, Framer)</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Оптимизация производительности</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service Item 4 -->
+                <div class="glass-card rounded-3xl p-8 sm:p-10 border border-glassBorder group hover:border-ultramarine/40 transition-all duration-300 reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-ultramarine/10 border border-ultramarine/30 flex items-center justify-center text-ultramarine text-2xl mb-6 group-hover:scale-110 group-hover:bg-ultramarine group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Brand Identity & Strategy</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm sm:text-base mb-6">
+                        Формируем премиальный визуальный стиль, логотипы, шрифтовую айдентику и правила коммуникации бренда.
+                    </p>
+                    <ul class="space-y-2 text-xs sm:text-sm text-slate-300">
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Айдентика и Логотипы</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Брандбуки и Гайдлайны</span></li>
+                        <li class="flex items-center space-x-2"><i class="fa-solid fa-check text-ultramarine"></i> <span>Стратегия позиционирования</span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT / MANIFESTO SECTION -->
+    <section id="about" class="py-24 px-6 relative z-20">
+        <div class="max-w-7xl mx-auto glass-card rounded-3xl p-8 sm:p-16 border border-glassBorder relative overflow-hidden reveal">
+            <!-- Background Glow -->
+            <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-ultramarine/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-3xl space-y-6 relative z-10">
+                <div class="text-xs font-semibold uppercase tracking-widest text-ultramarine">Философия VORTEX</div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                    Мы создаем не просто сайты, а цифровые произведения искусства.
+                </h2>
+                <p class="text-slate-300 text-base sm:text-lg font-light leading-relaxed">
+                    В эпоху шаблонных решений мы верим в индивидуальность, смелую типографику, кинематографическую эстетику и продуманный до пикселя UX. Наш подход объединяет инженерную точность и художественный авангард.
+                </p>
+                
+                <div class="pt-4 flex items-center space-x-6">
+                    <div>
+                        <div class="text-xl font-bold text-white">Александр Вортекс</div>
+                        <div class="text-xs text-slate-400">Основатель & Creative Director</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,118 @@
+
+    /* Custom Noise Texture Overlay */
+    .bg-noise {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+
+    /* Custom Glassmorphism Styles */
+    .glass-card {
+        background: rgba(18, 18, 28, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-card:hover {
+        border-color: rgba(91, 80, 246, 0.4);
+        box-shadow: 0 12px 40px 0 rgba(91, 80, 246, 0.15);
+    }
+
+    .glass-nav {
+        background: rgba(10, 10, 15, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Glowing Animated Border for CTA Button */
+    .glowing-btn-wrapper {
+        position: relative;
+        border-radius: 9999px;
+        padding: 1px;
+        background: linear-gradient(90deg, rgba(91,80,246,0.3), rgba(255,255,255,0.1), rgba(91,80,246,0.8), rgba(91,80,246,0.3));
+        background-size: 300% 100%;
+        animation: glowMove 4s linear infinite;
+    }
+
+    @keyframes glowMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Custom Cursor */
+    body {
+        cursor: default;
+    }
+
+    #cursor-dot, #cursor-outline {
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 9999;
+        transition: opacity 0.3s ease, transform 0.15s ease-out;
+    }
+
+    #cursor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #5B50F6;
+    }
+
+    #cursor-outline {
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(91, 80, 246, 0.5);
+        transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, transform 0.15s ease-out;
+    }
+
+    .cursor-hover #cursor-outline {
+        width: 55px;
+        height: 55px;
+        background: rgba(91, 80, 246, 0.1);
+        border-color: rgba(91, 80, 246, 0.8);
+    }
+
+    /* Scroll Animation Utility */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Text Gradient Effect */
+    .text-gradient {
+        background: linear-gradient(135deg, #FFFFFF 30%, #A5A0FF 70%, #5B50F6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-purple {
+        background: linear-gradient(135deg, #FFFFFF 0%, #E2E0FF 50%, #5B50F6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Hide scrollbars for clean aesthetic */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #0a0a0f;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1e1e2d;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #5B50F6;
+    }
